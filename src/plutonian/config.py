@@ -61,7 +61,7 @@ class Configurator(object):
             path='profiles/default', product=package_name,
             profile_type=EXTENSION)
 
-    def run_all_upgrades(self, setup):
+    def run_all_upgrades(self, setup, skip_policy=False):
         baseline = setup.getBaselineContextID().lstrip('profile-')
         run_upgrade(setup, baseline)
         candidates = set(setup.listProfilesWithUpgrades())
@@ -69,4 +69,5 @@ class Configurator(object):
             [baseline, self.policy_profile])
         for profile_id in candidates - ignored:
             run_upgrade(setup, profile_id)
-        run_upgrade(setup, self.policy_profile)
+        if not skip_policy:
+            run_upgrade(setup, self.policy_profile)
