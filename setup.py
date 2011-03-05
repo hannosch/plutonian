@@ -22,8 +22,9 @@ setup(
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     install_requires=[
-        'setuptools',
+        'Acquisition',
         'Products.GenericSetup',
+        'setuptools',
         'venusian',
         'zope.dottedname',
         ],

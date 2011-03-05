@@ -8,6 +8,8 @@ from Products.GenericSetup.zcml import _import_step_regs
 import venusian
 from zope.dottedname.resolve import resolve
 
+from plutonian.gs import run_upgrade
+
 
 class Configurator(object):
 
@@ -16,6 +18,8 @@ class Configurator(object):
         self.package_version = get_distribution(self.package_name).version
         self.policy_profile = u'%s:default' % self.package_name
         self.upgrades = []
+        self.ignored_upgrade_profiles = [u'Products.CMFDefault:default',
+            u'plone.app.iterate:plone.app.iterate']
 
     def scan(self, package=None, categories=('plutonian', )):
         if package is None:
@@ -56,3 +60,13 @@ class Configurator(object):
         _profile_registry.registerProfile('default', title, description=u'',
             path='profiles/default', product=package_name,
             profile_type=EXTENSION)
+
+    def run_all_upgrades(self, setup):
+        baseline = setup.getBaselineContextID().lstrip('profile-')
+        run_upgrade(setup, baseline)
+        candidates = set(setup.listProfilesWithUpgrades())
+        ignored = set(self.ignored_upgrade_profiles +
+            [baseline, self.policy_profile])
+        for profile_id in candidates - ignored:
+            run_upgrade(setup, profile_id)
+        run_upgrade(setup, self.policy_profile)
