@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1a1 - unreleased
+0.1a1 - 2011-03-05
 ------------------
 
 - Split out various helpers from an internal project.
