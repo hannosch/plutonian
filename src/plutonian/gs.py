@@ -36,12 +36,12 @@ def run_upgrade(setup, profile_id):
     request['profile_id'] = profile_id
     upgrades = setup.listUpgrades(profile_id)
     steps = []
+    if not upgrades:
+        return
     for u in upgrades:
         if isinstance(u, list): # pragma: no cover
             steps.extend([s['id'] for s in u])
         else:
             steps.append(u['id'])
-    else:
-        return
     request.form['upgrades'] = steps
     setup.manage_doUpgrades(request=request)
