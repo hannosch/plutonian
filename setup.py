@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='plutonian',
-    version = '1.0a1',
+    version = '0.1a1',
     author='Hanno Schlichting',
     author_email='hanno@hannosch.eu',
     description='Pyramid-style development for Plone.',

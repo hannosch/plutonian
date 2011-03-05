@@ -1,7 +1,14 @@
 Overview
 ========
 
-This project aims to bring the fun and ease of Pyramid development into Plone.
+This project aims to bring the fun and ease of the Pyramid development style
+into Plone.
+
+Status
+------
+
+The work is at a very early alpha stage. There's no promises of API stability
+or functionality yet.
 
 Development
 -----------
