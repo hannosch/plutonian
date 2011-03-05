@@ -31,7 +31,7 @@ class Configurator(object):
         if isinstance(package, basestring):
             name = package
             package = resolve(name)
-        else:
+        else: # pragma: no cover
             name = package.__name__
         return (name, package)
 
@@ -44,7 +44,7 @@ class Configurator(object):
         step = UpgradeStep(u'Upgrade %s' % name, self.policy_profile,
             str(destination - 1), str(destination), None, handler,
             checker=None, sortkey=0)
-        if destination in self.upgrades:
+        if destination in self.upgrades: # pragma: no cover
             raise ValueError('Duplicate upgrade step to destination %s'
                 % destination)
         self.upgrades.append(destination)
