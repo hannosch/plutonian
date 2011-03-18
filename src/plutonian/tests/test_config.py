@@ -1,13 +1,15 @@
 import unittest
 
-import plutonian
-
 
 class TestConfigurator(unittest.TestCase):
 
+    def get_module(self):
+        import plutonian
+        return plutonian
+
     def make_one(self):
-        from plutonian import Configurator
-        return Configurator('plutonian')
+        plutonian = self.get_module()
+        return plutonian.Configurator('plutonian')
 
     def test_package_name(self):
         config = self.make_one()
@@ -15,6 +17,7 @@ class TestConfigurator(unittest.TestCase):
 
     def test_package(self):
         config = self.make_one()
+        plutonian = self.get_module()
         self.assertEqual(config.package, plutonian)
 
     def test_policy_profile(self):
@@ -31,10 +34,12 @@ class TestConfigurator(unittest.TestCase):
         config = self.make_one()
         name, package = config.maybe_dotted('plutonian')
         self.assertEqual(name, 'plutonian')
+        plutonian = self.get_module()
         self.assertEqual(package, plutonian)
 
     def test_maybe_dotted_package(self):
         config = self.make_one()
+        plutonian = self.get_module()
         name, package = config.maybe_dotted(plutonian)
         self.assertEqual(name, 'plutonian')
         self.assertEqual(package, plutonian)
