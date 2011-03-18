@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='plutonian',
@@ -19,7 +19,7 @@ setup(
         'Operating System :: OS Independent',
         ],
     url='http://pypi.python.org/pypi/plutonian',
-    packages=find_packages('src'),
+    packages=['plutonian'],
     package_dir = {'': 'src'},
     install_requires=[
         'Acquisition',
