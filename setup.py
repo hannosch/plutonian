@@ -23,7 +23,7 @@ setup(
     package_dir = {'': 'src'},
     install_requires=[
         'Acquisition',
-        'Products.GenericSetup',
+        'Products.GenericSetup >= 1.6.3',
         'setuptools',
         'venusian',
         'zope.dottedname',

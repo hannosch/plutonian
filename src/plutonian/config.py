@@ -4,7 +4,6 @@ from Products.GenericSetup.registry import _import_step_registry
 from Products.GenericSetup.registry import _profile_registry
 from Products.GenericSetup.upgrade import _registerUpgradeStep
 from Products.GenericSetup.upgrade import UpgradeStep
-from Products.GenericSetup.zcml import _import_step_regs
 import venusian
 from zope.dottedname.resolve import resolve
 
@@ -36,7 +35,6 @@ class Configurator(object):
         return (name, package)
 
     def add_import_step(self, name, handler, depends):
-        _import_step_regs.append(name)
         _import_step_registry.registerStep(name, handler=handler,
             dependencies=depends, title=name)
 

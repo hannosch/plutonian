@@ -4,6 +4,8 @@ Changelog
 0.1a2 - unreleased
 ------------------
 
+- Update to work with GenericSetup 1.6.3+.
+  [hannosch]
 
 0.1a1 - 2011-03-05
 ------------------
