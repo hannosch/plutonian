@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1a2 - unreleased
+0.1a2 - 2011-04-18
 ------------------
 
 - Update to work with GenericSetup 1.6.3+.
