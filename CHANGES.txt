@@ -4,6 +4,9 @@ Changelog
 0.1a3 - unreleased
 ------------------
 
+- Update `import_step` default depends to `plone-final` instead of `types` and
+  `toolset`, so we are certain everything has been setup before us.
+  [hannosch]
 
 0.1a2 - 2011-04-18
 ------------------

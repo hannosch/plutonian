@@ -4,7 +4,7 @@ import venusian
 
 class import_step(object):
 
-    def __init__(self, depends=('toolset', 'types', 'workflow')):
+    def __init__(self, depends=('plone-final', 'workflow', )):
         self.depends = depends
 
     def register(self, scanner, name, wrapped):
