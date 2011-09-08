@@ -51,12 +51,12 @@ class Configurator(object):
     def last_upgrade_to(self):
         return unicode(max(self.upgrades))
 
-    def register_profile(self, package_name=None):
+    def register_profile(self, package_name=None, profile_name='default'):
         if package_name is None:
             package_name = self.package_name
-        title = '%s:default' % package_name
-        _profile_registry.registerProfile('default', title, description=u'',
-            path='profiles/default', product=package_name,
+        title = '%s:%s' % (package_name, profile_name)
+        _profile_registry.registerProfile(profile_name, title, description=u'',
+            path='profiles/%s' % profile_name, product=package_name,
             profile_type=EXTENSION)
 
     def run_all_upgrades(self, setup, skip_policy=False):

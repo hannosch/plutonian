@@ -4,6 +4,10 @@ Changelog
 0.1a3 - unreleased
 ------------------
 
+- Add optional `profile_name` argument to `register_profile` method, to allow
+  registration of secondary profile for one package.
+  [hannosch]
+
 - Update `import_step` default depends to `plone-final` instead of `types` and
   `toolset`, so we are certain everything has been setup before us.
   [hannosch]
