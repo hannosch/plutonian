@@ -1,14 +1,11 @@
 Overview
 ========
 
-This project aims to bring the fun and ease of the Pyramid development style
-into Plone.
+This project aims to bring some of the fun and ease of the Pyramid
+development style into Plone.
 
-Status
-------
-
-The work is at a very early alpha stage. There's no promises of API stability
-or functionality yet.
+At its current stage it only has some helpers to simplify GenericSetup
+handling, especially around upgrade steps.
 
 Development
 -----------
@@ -20,19 +17,14 @@ Assumptions
 -----------
 
 This project assumes you are writing a specific application based on top of
-Plone. Your project will consist of configuration, specific deployment
-settings, policy code and knowledge about the content structure.
+Plone. You have one policy package that manages the specifics of one site.
 
-We further assume that non-persistent configuration is generally preferable
-over persistent configuration, as it is easier to manage and version.
-
-This approach is very different from the typical Plone development model, in
-which you write add-ons for the Plone CMS application.
+This library is not useful or intended for writing reusable add-ons for Plone.
 
 Usage
 -----
 
-Preliminary notes on usage:
+Preliminary notes on using the GenericSetup helpers:
 
 In your policy package's (for example named `policy`) `__init__.py` in
 the `initialize` function::
@@ -99,3 +91,95 @@ and put a `metadata.xml` file in there::
     </metadata>
 
 You also need to create the empty flag file named `policy-various.txt`.
+
+The upgrade steps are registered in the normal place and can be run via the
+`portal_setup` ZMI screens. As an alternative you can create a `zopectl`
+command to run them from the command line. In your `setup.py` add an entry::
+
+    entry_points="""
+    [zopectl.command]
+    upgrade = policy.commands:upgrade
+    """)
+
+And create a `commands.py` with the function::
+
+    import logging
+    import sys
+
+    import transaction
+    from AccessControl.SecurityManagement import newSecurityManager
+    from zope.site.hooks import setHooks
+    from zope.site.hooks import setSite
+
+    logger = logging.getLogger()
+
+
+    def _setup(app, site=None):
+        """Set up our environment. Create a request, log in as admin and set
+        the traversal hooks on the site.
+        """
+        # Do not import this at the module level, or you get a demo storage
+        # ZODB instead of the real one!
+        from Testing import makerequest
+        app = makerequest.makerequest(app)
+
+        # Login as admin
+        admin = app.acl_users.getUserById('admin')
+        if admin is None:
+            logger.error("No user called `admin` found in the database.")
+            sys.exit(1)
+
+        # Wrap the admin in the right context
+        if site is not None:
+            admin = admin.__of__(site.acl_users)
+            site = app[site.getId()]
+        else:
+            admin = admin.__of__(app.acl_users)
+        newSecurityManager(None, admin)
+
+        # Set up local site manager, skins and language
+        if site is not None:
+            setHooks()
+            setSite(site)
+            site.setupCurrentSkin(site.REQUEST)
+            site.REQUEST['HTTP_ACCEPT_LANGUAGE'] = site.Language()
+
+        return (app, site)
+
+
+    def upgrade(app, args):
+        # Display all messages on stderr
+        logger.setLevel(logging.DEBUG)
+        logger.handlers[0].setLevel(logging.DEBUG)
+
+        existing = app.objectValues('Plone Site')
+        site = existing and existing[0] or None
+        if site is None:
+            logger.error("No Plone site found in the database.")
+            sys.exit(1)
+
+        _, site = _setup(app, site)
+
+        from policy.config import config
+
+        logger.info("Starting the upgrade.\n\n")
+        setup = site.portal_setup
+        config.run_all_upgrades(setup)
+        logger.info("Ran upgrade steps.")
+
+        # Recook resources, as some CSS/JS files might have changed.
+        site.portal_css.cookResources()
+        site.portal_javascripts.cookResources()
+        logger.info("Resources recooked.")
+
+        transaction.get().note('Upgraded profiles and recooked resources.')
+        transaction.get().commit()
+        sys.exit(0)
+
+
+You can then call this script via::
+
+    bin/instance upgrade
+
+It will currently recook the CSS/JS resources on each run, but otherwise has
+no ill side-effects, so you can run it as many times as you want.
