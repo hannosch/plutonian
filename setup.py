@@ -6,8 +6,8 @@ setup(
     author='Hanno Schlichting',
     author_email='hanno@hannosch.eu',
     description='Pyramid-style development for Plone.',
-    long_description=(open('README.txt').read() + '\n' +
-        open('CHANGES.txt').read()),
+    long_description=(open('README.rst').read() + '\n' +
+        open('CHANGES.rst').read()),
     license='BSD',
     keywords=('pyramid plone'),
     classifiers = [
