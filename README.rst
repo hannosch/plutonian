@@ -56,11 +56,14 @@ Create a `gs.py`::
     from plone.app.upgrade.utils import loadMigrationProfile
     from plutonian.gs import import_step
     from plutonian.gs import upgrade_to
+    from Products.CMFCore.utils import getToolByName
 
     from policy.config import config
 
 
     def set_profile_version(site):
+        # while creating a new site, assign the last version number and thus
+        # treat it as not needing any of the existing upgrade steps
         setup = getToolByName(site, 'portal_setup')
         setup.setLastVersionForProfile(
             config.policy_profile, config.last_upgrade_to())
@@ -76,7 +79,8 @@ Create a `gs.py`::
 
     @upgrade_to(2)
     def do_something(context):
-        # apply some existing GS files again as they might have changed
+        # apply some existing GS files again from the policy profile if they
+        # have changed or do anything else you might need to do
         loadMigrationProfile(context, 'profile-policy:default',
             steps=('cssregistry', 'jsregistry', 'plone.app.registry', ))
 
@@ -91,6 +95,9 @@ and put a `metadata.xml` file in there::
     </metadata>
 
 You also need to create the empty flag file named `policy-various.txt`.
+
+The `upgrade_to` decorator takes integers. No number can be taken multiple
+times, but there can be numbers missing in the sequence.
 
 The upgrade steps are registered in the normal place and can be run via the
 `portal_setup` ZMI screens. As an alternative you can create a `zopectl`
