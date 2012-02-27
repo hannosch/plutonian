@@ -106,7 +106,7 @@ command to run them from the command line. In your `setup.py` add an entry::
     entry_points="""
     [zopectl.command]
     upgrade = policy.commands:upgrade
-    """)
+    """
 
 And create a `commands.py` with the function::
 
