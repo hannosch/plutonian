@@ -19,7 +19,8 @@ Assumptions
 This project assumes you are writing a specific application based on top of
 Plone. You have one policy package that manages the specifics of one site.
 
-This library is not useful or intended for writing reusable add-ons for Plone.
+This library wasn't intended for writing reusable add-ons for Plone, but
+what's here should work for such a use-case.
 
 Usage
 -----
